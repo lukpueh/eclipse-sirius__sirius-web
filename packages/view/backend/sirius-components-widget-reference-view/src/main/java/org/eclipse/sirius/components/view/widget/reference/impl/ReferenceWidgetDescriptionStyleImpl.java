@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023, 2024 Obeo.
+ * Copyright (c) 2023, 2026 Obeo.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -53,8 +53,8 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * end-user-doc -->
      *
      * @see #getFontSize()
-     * @generated
      * @ordered
+     * @generated
      */
     protected static final int FONT_SIZE_EDEFAULT = 14;
 
@@ -63,8 +63,8 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * end-user-doc -->
      *
      * @see #getFontSize()
-     * @generated
      * @ordered
+     * @generated
      */
     protected int fontSize = FONT_SIZE_EDEFAULT;
 
@@ -73,8 +73,8 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * end-user-doc -->
      *
      * @see #isItalic()
-     * @generated
      * @ordered
+     * @generated
      */
     protected static final boolean ITALIC_EDEFAULT = false;
 
@@ -83,8 +83,8 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * end-user-doc -->
      *
      * @see #isItalic()
-     * @generated
      * @ordered
+     * @generated
      */
     protected boolean italic = ITALIC_EDEFAULT;
 
@@ -92,9 +92,9 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * The default value of the '{@link #isBold() <em>Bold</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
      * -->
      *
-     * @generated
      * @ordered
      * @see #isBold()
+     * @generated
      */
     protected static final boolean BOLD_EDEFAULT = false;
 
@@ -102,9 +102,9 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * The cached value of the '{@link #isBold() <em>Bold</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
      * -->
      *
-     * @generated
      * @ordered
      * @see #isBold()
+     * @generated
      */
     protected boolean bold = BOLD_EDEFAULT;
 
@@ -113,8 +113,8 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * end-user-doc -->
      *
      * @see #isUnderline()
-     * @generated
      * @ordered
+     * @generated
      */
     protected static final boolean UNDERLINE_EDEFAULT = false;
 
@@ -123,8 +123,8 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * end-user-doc -->
      *
      * @see #isUnderline()
-     * @generated
      * @ordered
+     * @generated
      */
     protected boolean underline = UNDERLINE_EDEFAULT;
 
@@ -133,8 +133,8 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * <!-- end-user-doc -->
      *
      * @see #isStrikeThrough()
-     * @generated
      * @ordered
+     * @generated
      */
     protected static final boolean STRIKE_THROUGH_EDEFAULT = false;
 
@@ -143,8 +143,8 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * <!-- end-user-doc -->
      *
      * @see #isStrikeThrough()
-     * @generated
      * @ordered
+     * @generated
      */
     protected boolean strikeThrough = STRIKE_THROUGH_EDEFAULT;
 
@@ -152,9 +152,9 @@ public class ReferenceWidgetDescriptionStyleImpl extends WidgetDescriptionStyleI
      * The cached value of the '{@link #getColor() <em>Color</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
      * -->
      *
-     * @generated
      * @ordered
      * @see #getColor()
+     * @generated
      */
     protected UserColor color;
 
