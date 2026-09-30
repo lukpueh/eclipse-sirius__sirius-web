@@ -58,7 +58,7 @@ public class ConnectorPaletteVariableManagerProvider implements IConnectorPalett
         var optionalSemanticEdgeSource = this.getSemanticElement(editingContext, (IDiagramElement) sourceDiagramElement);
         var optionalSemanticEdgeTarget = this.getSemanticElement(editingContext, (IDiagramElement) targetDiagramElement);
 
-        if (optionalSemanticEdgeSource.isPresent() && optionalSemanticEdgeTarget.isPresent()) {
+        if (optionalSemanticEdgeSource.isPresent()) {
             VariableManager variableManager = new VariableManager();
             variableManager.put(RepresentationVariables.SELF.name(), optionalSemanticEdgeSource.get());
             variableManager.put(CoreVariables.EDITING_CONTEXT.name(), editingContext);
@@ -66,9 +66,13 @@ public class ConnectorPaletteVariableManagerProvider implements IConnectorPalett
             variableManager.put(DiagramVariables.DIAGRAM_CONTEXT.name(), diagramContext);
             variableManager.put(IDiagramService.DIAGRAM_SERVICES, new DiagramService(diagramContext));
             variableManager.put(DiagramVariables.SEMANTIC_EDGE_SOURCE.name(), optionalSemanticEdgeSource.get());
-            variableManager.put(DiagramVariables.SEMANTIC_EDGE_TARGET.name(), optionalSemanticEdgeTarget.get());
             variableManager.put(DiagramVariables.EDGE_SOURCE.name(), sourceDiagramElement);
             variableManager.put(DiagramVariables.EDGE_TARGET.name(), targetDiagramElement);
+
+            variableManager.put(DiagramVariables.SEMANTIC_EDGE_TARGET.name(), optionalSemanticEdgeTarget
+                    .filter(Node.class::isInstance)
+                    .map(Node.class::cast)
+                    .orElse(null));
 
             variableManager.put(DiagramVariables.SELECTED_NODE.name(), Optional.ofNullable(sourceDiagramElement)
                     .filter(Node.class::isInstance)

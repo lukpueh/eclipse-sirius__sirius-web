@@ -22,6 +22,7 @@ import org.eclipse.sirius.components.collaborative.diagrams.api.IDiagramService;
 import org.eclipse.sirius.components.collaborative.diagrams.variables.DiagramVariables;
 import org.eclipse.sirius.components.core.api.Environment;
 import org.eclipse.sirius.components.core.api.IEditingContext;
+import org.eclipse.sirius.components.core.api.IObjectSearchService;
 import org.eclipse.sirius.components.core.api.variables.CoreVariables;
 import org.eclipse.sirius.components.diagrams.Edge;
 import org.eclipse.sirius.components.diagrams.Node;
@@ -30,33 +31,50 @@ import org.eclipse.sirius.components.representations.RepresentationVariables;
 import org.eclipse.sirius.components.representations.VariableManager;
 import org.eclipse.sirius.components.view.emf.diagram.ViewDiagramConversionData;
 import org.eclipse.sirius.components.view.emf.diagram.ViewDiagramDescriptionConverter;
-import org.eclipse.sirius.components.view.emf.diagram.tools.api.IConnectorPaletteVariableManagerProvider;
-import org.eclipse.sirius.components.view.emf.diagram.tools.api.IDiagramElementPaletteVariableManagerProvider;
+import org.eclipse.sirius.components.view.emf.diagram.tools.api.IDiagramElementConnectorToolsVariableManagerProvider;
 import org.eclipse.sirius.components.view.emf.editingcontext.api.IViewEditingContext;
 import org.springframework.stereotype.Service;
 
 /**
- * Used to provide the variable manager used to evaluate the precondition of the tools of the palette on a single click on a diagram element.
+ * Provides the variable manager used to evaluate connector tool preconditions for a diagram element.
  *
  * @author mcharfadi
  */
 @Service
-public class DiagramElementPaletteVariableManagerProvider implements IDiagramElementPaletteVariableManagerProvider {
+public class DiagramElementConnectorToolsVariableManagerProvider implements IDiagramElementConnectorToolsVariableManagerProvider {
+
+    private final IObjectSearchService objectSearchService;
 
     private final IOperationValidator operationValidator;
 
-    public DiagramElementPaletteVariableManagerProvider(IOperationValidator operationValidator, IConnectorPaletteVariableManagerProvider connectorPaletteVariableManagerProvider) {
+    public DiagramElementConnectorToolsVariableManagerProvider(IObjectSearchService objectSearchService, IOperationValidator operationValidator) {
+        this.objectSearchService = Objects.requireNonNull(objectSearchService);
         this.operationValidator = Objects.requireNonNull(operationValidator);
     }
 
     @Override
-    public Optional<VariableManager> getVariableManager(IEditingContext editingContext, DiagramContext diagramContext, Object diagramElement, Object semanticElement) {
+    public Optional<VariableManager> getVariableManager(IEditingContext editingContext, DiagramContext diagramContext, Object diagramElement) {
+        String targetObjectId = null;
+        if (diagramElement instanceof Node node) {
+            targetObjectId = node.getTargetObjectId();
+        } else if (diagramElement instanceof Edge edge) {
+            targetObjectId = edge.getTargetObjectId();
+        }
+
+        return Optional.ofNullable(targetObjectId)
+                .flatMap(id -> this.objectSearchService.getObject(editingContext, id))
+                .map(semanticElement -> this.createVariableManager(editingContext, diagramContext, diagramElement, semanticElement));
+    }
+
+    private VariableManager createVariableManager(IEditingContext editingContext, DiagramContext diagramContext, Object diagramElement, Object semanticElement) {
         VariableManager variableManager = new VariableManager();
         variableManager.put(RepresentationVariables.SELF.name(), semanticElement);
         variableManager.put(CoreVariables.EDITING_CONTEXT.name(), editingContext);
         variableManager.put(CoreVariables.ENVIRONMENT.name(), new Environment(Environment.SIRIUS_COMPONENTS));
         variableManager.put(DiagramVariables.DIAGRAM_CONTEXT.name(), diagramContext);
         variableManager.put(IDiagramService.DIAGRAM_SERVICES, new DiagramService(diagramContext));
+        variableManager.put(DiagramVariables.EDGE_SOURCE.name(), diagramElement);
+        variableManager.put(DiagramVariables.SEMANTIC_EDGE_SOURCE.name(), semanticElement);
 
         variableManager.put(DiagramVariables.SELECTED_NODE.name(), Optional.ofNullable(diagramElement)
                 .filter(Node.class::isInstance)
@@ -71,7 +89,7 @@ public class DiagramElementPaletteVariableManagerProvider implements IDiagramEle
                 .ifPresent(viewDiagramConversionData -> variableManager.put(ViewDiagramDescriptionConverter.CONVERTED_NODES_VARIABLE, viewDiagramConversionData.convertedNodes()));
 
         this.operationValidator.validate(DiagramInteractionOperations.EDGE_TOOL, variableManager.getVariables());
-        return Optional.of(variableManager);
+        return variableManager;
     }
 
     private Optional<ViewDiagramConversionData> getViewDiagramConversionData(IEditingContext editingContext, String diagramDescriptionId) {
@@ -84,5 +102,4 @@ public class DiagramElementPaletteVariableManagerProvider implements IDiagramEle
                 .filter(ViewDiagramConversionData.class::isInstance)
                 .map(ViewDiagramConversionData.class::cast);
     }
-
 }
